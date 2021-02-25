@@ -1,26 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
+import { observer } from "mobx-react-lite";
 import { useAppContext } from '../context/AppContextProvider';
 
 const Button = styled.div`
-    width: 10rem;
-    min-width: 40%;
-    height: 5rem;
-    min-height: 25%;
-    margin: 1rem;
+    width: 90%;
+    height: 4rem;
+    margin: 1%;
     border: 1px solid #d8d4ff;
     border-radius: 5px;
     background: url(${props => props.path}) no-repeat center / 50% 50%;
     background-color: ${props => props.chosen ? '#3c7dfa' : 'transparent'};
     cursor: pointer;
+    transition: all 0.2s linear;
+    &:hover {
+        border: 1px solid #3c7dfa;
+    }
+    @media only screen and (min-width: 992px) {
+        height: 5rem;
+        width: 40%;
+        max-width: 40%;
+        margin: 3%;
+    } 
 `;
 
-export default function OptionButton({ id, name }) {
+const OptionButton = observer(({ id, name, userId }) => {
 
-    const { chosenPaymentAlt, setChosenPaymentAlt } = useAppContext();
+    const { store } = useAppContext();
+    let { chosenPaymentAlt } = store.getUser(userId).data.settings;
 
     const handleClick = (e) => {
-        setChosenPaymentAlt(id);
+        store.getUser(userId).data.settings.chosenPaymentAlt = id;
     }
 
     return <Button 
@@ -28,4 +38,6 @@ export default function OptionButton({ id, name }) {
                 path={require(`../images/${id === chosenPaymentAlt ? name + '_white' : name}.svg`).default } 
                 chosen={id === chosenPaymentAlt} 
             />;
-} 
+});
+
+export default OptionButton;

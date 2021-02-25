@@ -17,12 +17,11 @@ const Title = styled.div`
     color: #b2bdca;
 `;
 
-export default function TitleBar() {
-
+export default function TitleBar({ id }) {
     return (
         <Container>
             <Title>passenger info</Title>
-            <ToggleButton onClick />
+            <ToggleButton id={id} />
         </Container>
     );
 } 

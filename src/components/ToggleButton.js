@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { observer } from "mobx-react-lite";
 import { useAppContext } from '../context/AppContextProvider';
-import ToggleOn from '../images/toggle_on.svg';
-import ToggleOff from '../images/toggle_off.svg';
 
 const Container = styled.div`
     display: flex;
@@ -25,21 +24,45 @@ const Toggle = styled.div`
     height: 4rem;
     background: url(${props => props.toggle}) no-repeat center / 100% 100%;
     cursor: pointer;
+`;
+
+const ToggleContainer = styled.div`
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 4rem;
+    height: 2rem;
+    border-radius: 20px;
+    background-color:  ${props => props.hideInfo ? '#b2bdca' : '#3c7dfa'};
+    cursor: pointer;
     transition: all 0.2s linear;
 `;
 
-export default function TitleBar() {
+const ToggleCircle = styled.div`
+    position: absolute;
+    left: ${props => props.hideInfo ? '0.1rem' : 'calc(100% - 1.9rem)'};
+    top: 0.1rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background-color: #ffffff;
+    transition: all 0.2s linear;
+`;
 
-    const { hideInfo, setHideInfo } = useAppContext();
+export default observer(function ToggleButton({ id }) {
 
+    const { store } = useAppContext();
+    const { hideInfo } = store.getUser(id).data.settings;
     const handleToggle = (e) => {
-        setHideInfo(!hideInfo);
+        store.getUser(id).data.settings.hideInfo = !hideInfo;
     }
 
     return (
         <Container>
             <Text>hide information</Text>
-            <Toggle onClick={handleToggle} toggle={hideInfo ? ToggleOff : ToggleOn} />
+            <ToggleContainer onClick={handleToggle} hideInfo={hideInfo}>
+                <ToggleCircle hideInfo={hideInfo} />
+            </ToggleContainer>
         </Container>
     );
-} 
+});

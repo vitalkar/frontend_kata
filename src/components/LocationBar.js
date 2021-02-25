@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { observer } from "mobx-react-lite";
+import { useAppContext } from '../context/AppContextProvider';
 import DataField from './DataField';
 import CheckIcon from '../images/done.svg';
 import LocationIcon from '../images/place.svg';
@@ -53,7 +55,9 @@ const Gap = styled.div`
     height: 100%;
 `;
 
-export default function LocationBar() {
+export default observer(function LocationBar({ id }) { 
+    const { store } = useAppContext();
+    const { startName, startAddress, endName, endAddress } = store.users.find(user => user.id === id).data.places; 
     return (
         <Container>
             <SymbolsContainer>
@@ -62,10 +66,10 @@ export default function LocationBar() {
                 <Location path={LocationIcon} />
             </SymbolsContainer>
             <DataContainer>
-                <DataField label={'jackson heights'} value={'32-27 74th street'} />
+                <DataField label={startName} value={startAddress} />
                 <Gap />
-                <DataField label={'green point'} value={'81 gate st brooklyn'} />
+                <DataField label={endName} value={endAddress} />
             </DataContainer>
         </Container>
     );
-} 
+});
